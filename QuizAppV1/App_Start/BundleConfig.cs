@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Optimization;
+using System.Web.Optimization.React;
 
 namespace QuizAppV1
 {
@@ -22,6 +23,8 @@ namespace QuizAppV1
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+            bundles.Add(new BabelBundle("~/bundles/main").Include(
+                "~/Scripts/React/ReactApp.jsx"));
         }
     }
 }
