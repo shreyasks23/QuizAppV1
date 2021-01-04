@@ -23,36 +23,29 @@ namespace QuizAppV1.Controllers.Assessments
                 entities.SaveChanges();
                 return AssessmentQuestion.Id;
             }
-            
+
         }
 
-        public ICollection<Models.Assessment> GetAllAssessments()
+        public IQueryable<Models.Assessment> GetAllAssessments()
         {
-            ICollection<Models.Assessment> assessments = new List<Models.Assessment>();
-
-
             using (entities)
             {
-                var DBAssessments = entities.Assessments.ToList();
-                foreach (var a in DBAssessments)
+                var DBAssessments = entities.Assessments.Select(a => new Models.Assessment()
                 {
-                    Models.Assessment assessment = new Models.Assessment
-                    {
-                        AssessmentID = a.AssessmentID,
-                        AssessmentName = a.AssessmentName,
-                        MaxMarks = a.MaxMarks,
-                        IsDeleted = (Boolean)a.Isdeleted
-                    };
-                    assessments.Add(assessment);
-                }
+                    AssessmentID = a.AssessmentID,
+                    AssessmentName = a.AssessmentName,
+                    MaxMarks = a.MaxMarks,
+                    IsDeleted = (bool)a.Isdeleted
+                });
 
+                return DBAssessments;
             }
-            return assessments;
+
         }
 
         public Models.Assessment GetAssessment(int ID)
         {
-            List<Models.Question> Questions = new List<Models.Question>();          
+            
 
 
             using (entities)
@@ -70,10 +63,9 @@ namespace QuizAppV1.Controllers.Assessments
                                                 MaxMarks = (float)q.MaxMarks,
                                                 IsDeleted = (bool)q.Isdeleted
                                             };
-                Questions = DbAssessmentQuestions.ToList();
+                var Questions = DbAssessmentQuestions.ToList();
                 foreach (var q in Questions)
                 {
-                    
                     q.Choices = entities.Choices.Where(c => c.QuestionID == q.QuestionID)
                         .Select(c => new Models.Choice()
                         {
@@ -83,8 +75,7 @@ namespace QuizAppV1.Controllers.Assessments
                             IsDeleted = (bool)c.Isdeleted,
                             QuestionID = (int)c.QuestionID
                         }).ToList();
-                }               
-
+                }
 
                 return new Models.Assessment
                 {

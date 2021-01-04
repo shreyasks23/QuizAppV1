@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using QuizAppDAO;
-
+using QuizAppV1.Models;
 
 namespace QuizAppV1.Controllers.Questions
 {
@@ -13,14 +13,15 @@ namespace QuizAppV1.Controllers.Questions
         {
             using (entities)
             {
-                var allQuestions = entities.Questions.Select(x => new Models.Question
+
+                var Questions = entities.Questions.Select(x => new Models.Question
                 {
                     QuestionID = x.QuestionID,
                     QuestionText = x.QuestionText,
                     MaxMarks = (float)x.MaxMarks
                 }).ToList();
 
-                foreach (var ques in allQuestions)
+                foreach (var ques in Questions)
                 {
                     ques.Choices = entities.Choices
                         .Where(x => x.QuestionID == ques.QuestionID)
@@ -32,8 +33,7 @@ namespace QuizAppV1.Controllers.Questions
                             QuestionID = ques.QuestionID
                         }).ToList();
                 }
-
-                return allQuestions;
+                return Questions;
 
             }
         }
@@ -57,8 +57,7 @@ namespace QuizAppV1.Controllers.Questions
                 var Question = new Models.Question
                 {
                     QuestionID = question.QuestionID,
-                    QuestionText = question.QuestionText,
-                    //CorrectChoiceID = question.CorrectChoiceID,
+                    QuestionText = question.QuestionText,                    
                     MaxMarks = (float)question.MaxMarks,
                     Choices = choices
                 };
@@ -69,7 +68,7 @@ namespace QuizAppV1.Controllers.Questions
 
         public Models.Question CreateQuestion(Models.Question question)
         {
-            //List<Models.Choice> choices = new List<Models.Choice>();
+            //adding question item
             using (entities)
             {
                 QuizAppDAO.Question DbQuestion = new QuizAppDAO.Question()
@@ -78,12 +77,14 @@ namespace QuizAppV1.Controllers.Questions
                     Isdeleted = question.IsDeleted,
                     MaxMarks = question.MaxMarks
                 };
-                //choices.AddRange(question.Choices);
+
                 entities.Questions.Add(DbQuestion);
                 entities.SaveChanges();
 
+
+                //adding choices to question
                 List<QuizAppDAO.Choice> DbChoices = new List<QuizAppDAO.Choice>();
-                foreach (var choice in question.Choices)    
+                foreach (var choice in question.Choices)
                 {
                     var Dbchoice = new QuizAppDAO.Choice()
                     {
@@ -97,7 +98,8 @@ namespace QuizAppV1.Controllers.Questions
                 entities.Choices.AddRange(DbChoices);
                 entities.SaveChanges();
 
-                List<Models.Choice> choices = new List<Models.Choice>();
+                ICollection<Models.Choice> choices = new List<Models.Choice>();
+
                 foreach (var dbchoice in DbChoices)
                 {
                     var choice = new Models.Choice()
@@ -122,6 +124,57 @@ namespace QuizAppV1.Controllers.Questions
             }
         }
 
-        
+        public Models.Question UpdateQuestion(int ID, Models.Question question)
+        {
+            using (entities)
+            {
+                var DbQuestion = entities.Questions.FirstOrDefault(q => q.QuestionID == ID);
+
+                if (DbQuestion != null)
+                {
+                    DbQuestion.QuestionText = question.QuestionText;
+                    DbQuestion.MaxMarks = question.MaxMarks;
+                    entities.SaveChanges();
+                }
+
+                var Question = new Models.Question()
+                {
+                    QuestionID = DbQuestion.QuestionID,
+                    QuestionText = DbQuestion.QuestionText,
+                    MaxMarks = (float)DbQuestion.MaxMarks,
+                    //Choices = choiceList,
+                    IsDeleted = (bool)DbQuestion.Isdeleted
+                };
+
+
+                var DbChoices = entities.Choices.Where(x => x.QuestionID == ID);
+
+                foreach (var choice in DbChoices)
+                {
+                    foreach(var c in question.Choices)
+                    {
+                        if(choice.ChoiceID == c.ChoiceID)
+                        {
+                            choice.ChoiceText = c.ChoiceText;
+                            choice.IsCorrect = c.IsCorrect;
+                        }
+                    }                    
+                }
+                entities.SaveChanges();
+
+                var choiceList = DbChoices.Select(c => new Models.Choice()
+                    {
+                        ChoiceID = c.ChoiceID,
+                        ChoiceText = c.ChoiceText,
+                        IsCorrect = (bool)c.IsCorrect,
+                        QuestionID = (int)c.QuestionID,
+                        IsDeleted = (bool)c.Isdeleted
+                    }).ToList();
+
+                Question.Choices = choiceList;
+
+                return Question;
+            }
+        }
     }
 }

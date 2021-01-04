@@ -11,6 +11,6 @@ namespace QuizAppV1.Models
         public string AssessmentName { get; set; }
         public float MaxMarks { get; set; }
         public Boolean IsDeleted { get; set; }
-        public List<Question> AssessmentQuestions { get; set; }
+        public ICollection<Question> AssessmentQuestions { get; set; }
     }
 }
