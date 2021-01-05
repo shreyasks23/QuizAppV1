@@ -22,7 +22,18 @@ namespace QuizAppV1.Controllers.Assessments
         [Route("getAssessmentById")]
         public Models.Assessment GetAssessment([FromUri] int ID)
         {
-            return assessmentDAO.GetAssessment(ID);
+
+            var assessment = assessmentDAO.GetAssessment(ID);
+            if(assessment == null)
+            {
+                var res = new HttpResponseMessage(HttpStatusCode.NotFound)
+                {
+                    Content = new StringContent(string.Format("Assessment with ID = {0} not found", ID)),
+                    ReasonPhrase = "Assessment Not Found"
+                };
+                throw new HttpResponseException(res);
+            }
+            return assessment;
         }
 
         [HttpPost]
@@ -33,5 +44,42 @@ namespace QuizAppV1.Controllers.Assessments
             var response = Request.CreateResponse(HttpStatusCode.Created, result);
             return response;
         }
+
+        [HttpPost]
+        [Route("createAssessment")]
+        public HttpResponseMessage CreateAssessment([FromBody] Models.Assessment assessment)
+        {
+            if(assessment == null)
+            {
+                var res = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(string.Format("Provide Assessment Details"))
+                };
+                throw new HttpResponseException(res);
+            }
+
+            var result = assessmentDAO.CreateAssessment(assessment);
+
+            return Request.CreateResponse(HttpStatusCode.Created, result);
+        }
+
+        [HttpPut]
+        [Route("updateAssessment")]
+        public HttpResponseMessage UpdateAssessment([FromUri]int Id ,[FromBody]Models.Assessment assessment)
+        {
+            if(assessment == null)
+            {
+                var res = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(string.Format("Provide Assessment Details")),
+                    ReasonPhrase = "Invalid details"
+                };
+                throw new HttpResponseException(res);
+            }
+            var result = assessmentDAO.UpdateAssessment(Id , assessment);
+
+            return Request.CreateResponse(HttpStatusCode.Accepted, result);
+        }
     }
 }
+ 

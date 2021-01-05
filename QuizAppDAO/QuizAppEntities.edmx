@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="QuizAppModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="QuizAppModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AssessmentQuestions">
           <Key>
             <PropertyRef Name="Id" />
@@ -20,7 +20,7 @@
           </Key>
           <Property Name="AssessmentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AssessmentName" Type="nvarchar" MaxLength="100" Nullable="false" />
-          <Property Name="MaxMarks" Type="int" Nullable="false" />
+          <Property Name="MaxMarks" Type="float" />
           <Property Name="Isdeleted" Type="bit" />
         </EntityType>
         <EntityType Name="AssessmentUsers">
@@ -176,8 +176,7 @@
             <End Role="Choices" EntitySet="Choices" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="QuizAppModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -198,7 +197,7 @@
           </Key>
           <Property Name="AssessmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="AssessmentName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="MaxMarks" Type="Int32" Nullable="false" />
+          <Property Name="MaxMarks" Type="Double" />
           <Property Name="Isdeleted" Type="Boolean" />
           <NavigationProperty Name="AssessmentQuestions" Relationship="Self.FK__Assessmen__Asses__2B3F6F97" FromRole="Assessments" ToRole="AssessmentQuestions" />
           <NavigationProperty Name="AssessmentUsers" Relationship="Self.FK__Assessmen__Asses__37A5467C" FromRole="Assessments" ToRole="AssessmentUsers" />
