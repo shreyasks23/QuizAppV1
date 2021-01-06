@@ -12,5 +12,6 @@ namespace QuizAppV1.Controllers.Users
         List<Models.User> GetAllUsers();
         Models.User GetUser(int Id);
         Models.User CreateUser(Models.User user);
+        Models.User UpdateUser(int id, Models.User user);
     }
 }

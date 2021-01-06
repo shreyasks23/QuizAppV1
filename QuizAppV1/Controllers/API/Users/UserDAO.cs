@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Configuration;
-using QuizAppV1;
 using QuizAppDAO;
+using QuizAppV1.Models;
 using User = QuizAppDAO.User;
-using System.Web.Http;
+
 
 namespace QuizAppV1.Controllers.Users
 {
     public class UserDAO : IUserDAO
     {
-
+        private readonly QuizAppEntities entities = new QuizAppEntities();
 
         public List<Models.User> GetAllUsers()
         {
             List<User> users = new List<User>();
-            using (QuizAppEntities entities = new QuizAppEntities())
+            using (entities)
             {
                 return entities.Users.Select(x => new Models.User
                 {
@@ -31,25 +29,31 @@ namespace QuizAppV1.Controllers.Users
         }
         public Models.User GetUser(int UserID)
         {
-            using (QuizAppEntities entities = new QuizAppEntities())
+            using (entities)
             {
                 var user = entities.Users.FirstOrDefault(u => u.UserID == UserID);
-                return new Models.User
+
+                if (user != null)
                 {
-                    UserID = user.UserID,
-                    UserName = user.UserName,
-                    Password = user.Password,
-                    IsDeleted = (Boolean)user.Isdeleted                  
-                   
-                }; 
-            }           
+
+                    return new Models.User
+                    {
+                        UserID = user.UserID,
+                        UserName = user.UserName,
+                        Password = user.Password,
+                        IsDeleted = user.Isdeleted
+                    };
+                }
+                return null;
+            }  
+         
         }
         
         public Models.User CreateUser(Models.User user)
         {
-            using (QuizAppEntities entities = new QuizAppEntities())
+            using (entities)
             {
-                QuizAppDAO.User DBuser = new User()
+                User DBuser = new User()
                 {
                     UserName = user.UserName,
                     Password = user.Password,
@@ -63,10 +67,40 @@ namespace QuizAppV1.Controllers.Users
                     UserID = DBuser.UserID,
                     UserName = DBuser.UserName,
                     Password = DBuser.Password,
-                    IsDeleted = (Boolean)DBuser.Isdeleted
+                    IsDeleted = DBuser.Isdeleted
                 };
             }
             
+        }
+
+        public Models.User UpdateUser(int id, Models.User user)
+        {
+            if(id < 0) {
+                return null;
+            }
+            else {
+                using (entities) {
+                    var dbUser = entities.Users.FirstOrDefault(u => u.UserID == id);
+
+                    if(dbUser != null) {
+                        dbUser.UserName = user.UserName;
+                        dbUser.Password = user.Password;
+                        dbUser.Isdeleted = user.IsDeleted;
+                        entities.SaveChanges();
+
+                        return new Models.User() {
+                            UserID = dbUser.UserID,
+                            UserName = dbUser.UserName,
+                            Password = dbUser.Password,
+                            IsDeleted = dbUser.Isdeleted
+                        };
+                    }
+                    else {
+                        return null;
+                    }
+
+                }
+            }
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using QuizAppV1.Filters;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -8,10 +6,8 @@ namespace QuizAppV1
 {
     public static class WebApiConfig
     {
-        public static void Register(HttpConfiguration config)      {
-
-            
-
+        public static void Register(HttpConfiguration config)
+        {
             // Web API configuration and services
             var json = config.Formatters.JsonFormatter;
             json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
@@ -27,6 +23,9 @@ namespace QuizAppV1
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Filters.Add(new BasicAuth());
+
 
         }
     }
