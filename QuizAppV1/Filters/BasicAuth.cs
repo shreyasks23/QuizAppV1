@@ -29,13 +29,10 @@ namespace QuizAppV1.Filters
                 else {
                     actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
                 }
-
             }
             else {
                 actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
             }
-
-
         }
 
         private static bool IsAuthorizedUser(string userName, string password)

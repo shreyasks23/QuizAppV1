@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using QuizAppDAO;
-using QuizAppV1.Models;
+using QuizAppV1.Helpers;
 using User = QuizAppDAO.User;
 
 
@@ -15,29 +15,24 @@ namespace QuizAppV1.Controllers.Users
         public List<Models.User> GetAllUsers()
         {
             List<User> users = new List<User>();
-            using (entities)
-            {
-                return entities.Users.Select(x => new Models.User
-                {
+            using (entities) {
+                return entities.Users.Select(x => new Models.User {
                     UserID = x.UserID,
                     UserName = x.UserName,
                     Password = x.Password,
-                    IsDeleted = (Boolean)x.Isdeleted
-                }).ToList();                
+                    IsDeleted = x.Isdeleted
+                }).ToList();
             }
 
         }
         public Models.User GetUser(int UserID)
         {
-            using (entities)
-            {
+            using (entities) {
                 var user = entities.Users.FirstOrDefault(u => u.UserID == UserID);
 
-                if (user != null)
-                {
+                if (user != null) {
 
-                    return new Models.User
-                    {
+                    return new Models.User {
                         UserID = user.UserID,
                         UserName = user.UserName,
                         Password = user.Password,
@@ -45,16 +40,14 @@ namespace QuizAppV1.Controllers.Users
                     };
                 }
                 return null;
-            }  
-         
+            }
+
         }
-        
+
         public Models.User CreateUser(Models.User user)
         {
-            using (entities)
-            {
-                User DBuser = new User()
-                {
+            using (entities) {
+                User DBuser = new User() {
                     UserName = user.UserName,
                     Password = user.Password,
                     Isdeleted = user.IsDeleted
@@ -62,27 +55,26 @@ namespace QuizAppV1.Controllers.Users
                 entities.Users.Add(DBuser);
                 entities.SaveChanges();
 
-                return new Models.User
-                {
+                return new Models.User {
                     UserID = DBuser.UserID,
                     UserName = DBuser.UserName,
                     Password = DBuser.Password,
                     IsDeleted = DBuser.Isdeleted
                 };
             }
-            
+
         }
 
         public Models.User UpdateUser(int id, Models.User user)
         {
-            if(id < 0) {
+            if (id < 0) {
                 return null;
             }
             else {
                 using (entities) {
                     var dbUser = entities.Users.FirstOrDefault(u => u.UserID == id);
 
-                    if(dbUser != null) {
+                    if (dbUser != null) {
                         dbUser.UserName = user.UserName;
                         dbUser.Password = user.Password;
                         dbUser.Isdeleted = user.IsDeleted;
@@ -101,6 +93,23 @@ namespace QuizAppV1.Controllers.Users
 
                 }
             }
+        }
+
+        public Models.User AuthenticatedUser(string userName, string password)
+        {
+            using (entities) {
+                var user = entities.Users.Where(x => x.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase) && x.Password == password).Select(u => new Models.User() {
+                    UserName = u.UserName,
+                    Password = u.Password,
+                    IsDeleted = u.Isdeleted
+                }).FirstOrDefault();
+
+                if (user != null) {
+                    return user.WithoutPassword();
+                }
+                else return null;
+            }
+
         }
     }
 }

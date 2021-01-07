@@ -7,20 +7,20 @@ using QuizAppV1.Filters;
 
 namespace QuizAppV1.Controllers
 {   
-    [BasicAuth]
+    
     [RoutePrefix("api/users")]
     public class UserController : ApiController
     {
         readonly UserDAO userDAO = new UserDAO();
 
+        [BasicAuth]
         [HttpGet]
         [Route("")]
-
         public List<Models.User> GetAllUsers()
         {
             return userDAO.GetAllUsers();
         }
-
+        [BasicAuth]
         [HttpGet]
         [Route("getUserById/{id}")]
         public HttpResponseMessage GetUser(int id)
@@ -38,7 +38,7 @@ namespace QuizAppV1.Controllers
                 return Request.CreateResponse(HttpStatusCode.OK, user);
             }
         }
-
+        [BasicAuth]
         [HttpPost]
         [Route("createUser")]
         public HttpResponseMessage CreateUser([FromBody]Models.User user)
@@ -55,7 +55,7 @@ namespace QuizAppV1.Controllers
                 return response;
             }
         }
-
+        [BasicAuth]
         [HttpPut]
         [Route("updateUser/{id}")]
         public HttpResponseMessage UpdateUser([FromUri]int id, [FromBody]Models.User user)
@@ -77,6 +77,29 @@ namespace QuizAppV1.Controllers
                 }
                 return Request.CreateResponse(HttpStatusCode.OK, updatedUser);
             }
+        }
+
+        [HttpPost]
+        [Route("authenticate")]
+        public HttpResponseMessage Authenticate([FromBody] Models.AuthenticateModel authUser)
+        {
+            var user = userDAO.AuthenticatedUser(authUser.Username, authUser.Password);
+
+            if (user != null) {
+                var response = new Models.AuthenticateModel() {
+                    Username = user.UserName,
+                    Password = user.Password
+                };
+                return Request.CreateResponse(HttpStatusCode.OK, response);
+            }
+
+            else {
+                var errRes = new HttpResponseMessage(HttpStatusCode.BadRequest) {
+                    Content = new StringContent("Provide user details")
+                };
+
+                throw new HttpResponseException(errRes);
+            } 
         }
 
     }

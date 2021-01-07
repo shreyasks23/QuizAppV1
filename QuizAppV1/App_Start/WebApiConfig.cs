@@ -24,7 +24,7 @@ namespace QuizAppV1
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            config.Filters.Add(new BasicAuth());
+            //config.Filters.Add(new BasicAuth());
 
 
         }
