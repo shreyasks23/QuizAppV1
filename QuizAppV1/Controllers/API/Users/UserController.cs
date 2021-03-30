@@ -79,28 +79,28 @@ namespace QuizAppV1.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("authenticate")]
-        public HttpResponseMessage Authenticate([FromBody] Models.AuthenticateModel authUser)
-        {
-            var user = userDAO.AuthenticatedUser(authUser.Username, authUser.Password);
+        //[HttpPost]
+        //[Route("authenticate")]
+        //public HttpResponseMessage Authenticate([FromBody] Models.AuthenticateModel authUser)
+        //{
+        //    var user = userDAO.AuthenticatedUser(authUser.Username, authUser.Password);
 
-            if (user != null) {
-                var response = new Models.AuthenticateModel() {
-                    Username = user.UserName,
-                    Password = user.Password
-                };
-                return Request.CreateResponse(HttpStatusCode.OK, response);
-            }
+        //    if (user != null) {
+        //        var response = new Models.AuthenticateModel() {
+        //            Username = user.UserName,
+        //            Password = user.Password
+        //        };
+        //        return Request.CreateResponse(HttpStatusCode.OK, response);
+        //    }
 
-            else {
-                var errRes = new HttpResponseMessage(HttpStatusCode.BadRequest) {
-                    Content = new StringContent("Provide user details")
-                };
+        //    else {
+        //        var errRes = new HttpResponseMessage(HttpStatusCode.BadRequest) {
+        //            Content = new StringContent("Provide user details")
+        //        };
 
-                throw new HttpResponseException(errRes);
-            } 
-        }
+        //        throw new HttpResponseException(errRes);
+        //    } 
+        //}
 
     }
 }

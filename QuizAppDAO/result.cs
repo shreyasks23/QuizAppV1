@@ -17,7 +17,7 @@ namespace QuizAppDAO
         public int ResultID { get; set; }
         public double TotalMarks { get; set; }
         public double MarksScored { get; set; }
-        public int UserID { get; set; }
+        public Nullable<int> UserID { get; set; }
         public Nullable<bool> Isdeleted { get; set; }
     
         public virtual User User { get; set; }

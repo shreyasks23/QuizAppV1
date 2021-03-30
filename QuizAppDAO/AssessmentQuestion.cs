@@ -15,8 +15,8 @@ namespace QuizAppDAO
     public partial class AssessmentQuestion
     {
         public int Id { get; set; }
-        public int QuestionID { get; set; }
-        public int AssessmentID { get; set; }
+        public Nullable<int> QuestionID { get; set; }
+        public Nullable<int> AssessmentID { get; set; }
         public Nullable<bool> Isdeleted { get; set; }
     
         public virtual Assessment Assessment { get; set; }

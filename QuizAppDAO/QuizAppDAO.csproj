@@ -108,6 +108,7 @@
       <DependentUpon>QuizAppEntities.edmx</DependentUpon>
       <LastGenOutput>QuizAppEntities.Context.cs</LastGenOutput>
     </Content>
+    <Content Include="QuizAppEntities.edmx.sql" />
     <Content Include="QuizAppEntities.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>QuizAppEntities.edmx</DependentUpon>

@@ -23,7 +23,7 @@ namespace QuizAppDAO
     
         public int AssessmentID { get; set; }
         public string AssessmentName { get; set; }
-        public Nullable<double> MaxMarks { get; set; }
+        public double MaxMarks { get; set; }
         public Nullable<bool> Isdeleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

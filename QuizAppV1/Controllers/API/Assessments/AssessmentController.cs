@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using QuizAppV1.Filters;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,7 +11,7 @@ namespace QuizAppV1.Controllers.Assessments
     public class AssessmentController : ApiController
     {
         private readonly AssessmentDAO assessmentDAO = new AssessmentDAO();
-
+        [BasicAuth]
         [HttpGet]
         [Route("")]
         public List<Models.Assessment> GetAssessments()

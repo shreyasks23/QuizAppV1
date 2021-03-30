@@ -20,7 +20,7 @@ namespace QuizAppV1.Controllers.Users
                     UserID = x.UserID,
                     UserName = x.UserName,
                     Password = x.Password,
-                    IsDeleted = x.Isdeleted
+                    IsDeleted = (bool)x.Isdeleted
                 }).ToList();
             }
 
@@ -36,7 +36,7 @@ namespace QuizAppV1.Controllers.Users
                         UserID = user.UserID,
                         UserName = user.UserName,
                         Password = user.Password,
-                        IsDeleted = user.Isdeleted
+                        IsDeleted = (bool)user.Isdeleted
                     };
                 }
                 return null;
@@ -59,7 +59,7 @@ namespace QuizAppV1.Controllers.Users
                     UserID = DBuser.UserID,
                     UserName = DBuser.UserName,
                     Password = DBuser.Password,
-                    IsDeleted = DBuser.Isdeleted
+                    IsDeleted = (bool)DBuser.Isdeleted
                 };
             }
 
@@ -84,7 +84,7 @@ namespace QuizAppV1.Controllers.Users
                             UserID = dbUser.UserID,
                             UserName = dbUser.UserName,
                             Password = dbUser.Password,
-                            IsDeleted = dbUser.Isdeleted
+                            IsDeleted = (bool)dbUser.Isdeleted
                         };
                     }
                     else {
@@ -101,14 +101,14 @@ namespace QuizAppV1.Controllers.Users
                 var user = entities.Users.Where(x => x.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase) && x.Password == password).Select(u => new Models.User() {
                     UserName = u.UserName,
                     Password = u.Password,
-                    IsDeleted = u.Isdeleted
+                    IsDeleted = (bool)u.Isdeleted
                 }).FirstOrDefault();
 
                 if (user != null) {
                     return user.WithoutPassword();
                 }
                 else return null;
-            }
+            }   
 
         }
     }
